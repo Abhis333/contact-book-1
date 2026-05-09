@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{{ contact.name }} - ContactBook{% endblock %}
+
+{% block content %}
+  <section class="contact-detail">
+    <div class="detail-header">
+      <h2>{{ contact.name }}</h2>
+      <span class="category-badge">{{ contact.get('category', 'Personal') }}</span>
+    </div>
+
+    <div class="detail-actions">
+      <a class="button button-primary" href="{{ url_for('edit_contact', contact_id=contact._id) }}">Edit</a>
+      <form class="inline-form" action="{{ url_for('delete_contact', contact_id=contact._id) }}" method="post" onsubmit="return confirm('Delete this contact?');">
+        <button class="button button-danger" type="submit">Delete</button>
+      </form>
+      <a class="button button-secondary" href="{{ url_for('index') }}">Back</a>
+    </div>
+
+    <div class="detail-content">
+      {% if contact.get('emails') %}
+        <div class="detail-section">
+          <h3>Email</h3>
+          {% for email in contact.emails %}
+            <p><a href="mailto:{{ email }}">{{ email }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if contact.get('phones') %}
+        <div class="detail-section">
+          <h3>Phone</h3>
+          {% for phone in contact.phones %}
+            <p><a href="tel:{{ phone }}">{{ phone }}</a></p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      {% if contact.get('company') %}
+        <div class="detail-section">
+          <h3>Company</h3>
+          <p>{{ contact.company }}</p>
+        </div>
+      {% endif %}
+
+      {% if contact.get('address') %}
+        <div class="detail-section">
+          <h3>Address</h3>
+          <p>{{ contact.address }}</p>
+        </div>
+      {% endif %}
+
+      {% if contact.get('website') %}
+        <div class="detail-section">
+          <h3>Website</h3>
+          <p><a href="{{ contact.website }}" target="_blank">{{ contact.website }}</a></p>
+        </div>
+      {% endif %}
+
+      {% if contact.get('tags') %}
+        <div class="detail-section">
+          <h3>Tags</h3>
+          <div class="tags">
+            {% for tag in contact.tags %}
+              <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      {% if contact.get('notes') %}
+        <div class="detail-section">
+          <h3>Notes</h3>
+          <p>{{ contact.notes }}</p>
+        </div>
+      {% endif %}
+
+      <div class="detail-section">
+        <h3>Dates</h3>
+        <p><strong>Created:</strong> {{ contact.get('created_at', '')|default('Unknown') }}</p>
+        <p><strong>Updated:</strong> {{ contact.get('updated_at', '')|default('Unknown') }}</p>
+      </div>
+    </div>
+
+    {% if activities %}
+      <div class="activities-section">
+        <h3>Activity History</h3>
+        <div class="activities-list">
+          {% for activity in activities %}
+            <div class="activity-item">
+              <span class="activity-action">{{ activity.action }}</span>
+              <span class="activity-details">{{ activity.details }}</span>
+              <span class="activity-time">{{ activity.timestamp }}</span>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}ContactBook{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <div class="header-content">
+          <a class="site-brand" href="{{ url_for('index') }}">
+            <span class="brand-mark">CB</span>
+            <span>ContactBook</span>
+          </a>
+          <nav class="main-nav">
+            <a href="{{ url_for('index') }}">Contacts</a>
+            <a href="{{ url_for('add_contact') }}">New Contact</a>
+            <a href="{{ url_for('import_contacts') }}">Import</a>
+            <a href="{{ url_for('export_contacts') }}">Export</a>
+            <a href="{{ url_for('stats') }}">Stats</a>
+            {% if current_user %}
+              <span class="nav-user">{{ current_user.email }}</span>
+              <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+              <a href="{{ url_for('register') }}">Register</a>
+              <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2026 ContactBook. Manage your contacts anywhere, anytime.</p>
+      </div>
+    </footer>
+  </body>
+</html>

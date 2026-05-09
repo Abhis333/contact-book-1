@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Statistics - ContactBook{% endblock %}
+
+{% block content %}
+  <section class="stats-section">
+    <h2>Contact Statistics</h2>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-number">{{ total }}</div>
+        <div class="stat-label">Total Contacts</div>
+      </div>
+    </div>
+
+    {% if by_category %}
+      <div class="stats-group">
+        <h3>Contacts by Category</h3>
+        <div class="stats-grid">
+          {% for category, count in by_category.items() %}
+            {% if count > 0 %}
+              <div class="stat-card">
+                <div class="stat-number">{{ count }}</div>
+                <div class="stat-label">{{ category }}</div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if by_tag %}
+      <div class="stats-group">
+        <h3>Contacts by Tag</h3>
+        <div class="stats-grid">
+          {% for tag, count in by_tag.items() %}
+            <div class="stat-card">
+              <div class="stat-number">{{ count }}</div>
+              <div class="stat-label">{{ tag }}</div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    {% endif %}
+
+    <div class="stats-actions">
+      <a class="button button-secondary" href="{{ url_for('index') }}">Back to Contacts</a>
+    </div>
+  </section>
+{% endblock %}

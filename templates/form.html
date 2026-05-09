@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ action }} - ContactBook{% endblock %}
+
+{% block content %}
+  <section class="form-panel">
+    <h2>{{ action }}</h2>
+    <form method="post" class="contact-form">
+      <div class="form-group">
+        <label for="name">Name *</label>
+        <input id="name" name="name" type="text" value="{{ contact.get('name', '') if contact else '' }}" required />
+      </div>
+
+      <div class="form-group">
+        <label for="emails">Email(s) <span class="hint">(comma-separated)</span></label>
+        <input id="emails" name="emails" type="text" value="{{ ','.join(contact.get('emails', [])) if contact else '' }}" placeholder="john@example.com, john.doe@work.com" />
+      </div>
+
+      <div class="form-group">
+        <label for="phones">Phone(s) <span class="hint">(comma-separated)</span></label>
+        <input id="phones" name="phones" type="text" value="{{ ','.join(contact.get('phones', [])) if contact else '' }}" placeholder="+1-555-0100, +1-555-0101" />
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select id="category" name="category">
+          <option value="Personal" {% if contact and contact.get('category') == 'Personal' %}selected{% endif %}>Personal</option>
+          <option value="Work" {% if contact and contact.get('category') == 'Work' %}selected{% endif %}>Work</option>
+          <option value="Family" {% if contact and contact.get('category') == 'Family' %}selected{% endif %}>Family</option>
+          <option value="Friend" {% if contact and contact.get('category') == 'Friend' %}selected{% endif %}>Friend</option>
+          <option value="Colleague" {% if contact and contact.get('category') == 'Colleague' %}selected{% endif %}>Colleague</option>
+          <option value="Other" {% if contact and contact.get('category') == 'Other' %}selected{% endif %}>Other</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="tags">Tags <span class="hint">(comma-separated)</span></label>
+        <input id="tags" name="tags" type="text" value="{{ ','.join(contact.get('tags', [])) if contact else '' }}" placeholder="vip, urgent, follow-up" />
+      </div>
+
+      <div class="form-group">
+        <label for="company">Company</label>
+        <input id="company" name="company" type="text" value="{{ contact.get('company', '') if contact else '' }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address</label>
+        <input id="address" name="address" type="text" value="{{ contact.get('address', '') if contact else '' }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="website">Website</label>
+        <input id="website" name="website" type="url" value="{{ contact.get('website', '') if contact else '' }}" />
+      </div>
+
+      <div class="form-group">
+        <label for="notes">Notes</label>
+        <textarea id="notes" name="notes" rows="6">{{ contact.get('notes', '') if contact else '' }}</textarea>
+      </div>
+
+      <div class="form-actions">
+        <button class="button button-primary" type="submit">Save Contact</button>
+        <a class="button button-secondary" href="{{ url_for('index') }}">Cancel</a>
+      </div>
+    </form>
+  </section>
+{% endblock %}

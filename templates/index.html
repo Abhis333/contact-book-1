@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Contacts - ContactBook{% endblock %}
+
+{% block content %}
+  <section class="section-card">
+    <h1 class="page-title">Your Contacts</h1>
+
+    <section class="search-section">
+      <form method="get" class="search-form">
+        <input type="text" name="q" placeholder="Search contacts by name, email, phone, company..." value="{{ search_query }}" />
+        <button type="submit" class="button button-primary">Search</button>
+      </form>
+
+      <div class="filters">
+        {% if categories %}
+          <select name="category" onchange="this.form.submit()" class="filter-select">
+            <option value="">All Categories</option>
+            {% for cat in categories %}
+              <option value="{{ cat }}" {% if current_category == cat %}selected{% endif %}>{{ cat }}</option>
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        {% if all_tags %}
+          <select name="tag" onchange="this.form.submit()" class="filter-select">
+            <option value="">All Tags</option>
+            {% for t in all_tags %}
+              <option value="{{ t }}" {% if current_tag == t %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+          </select>
+        {% endif %}
+
+        {% if search_query or current_category or current_tag %}
+          <a href="{{ url_for('index') }}" class="clear-filters">Clear Filters</a>
+        {% endif %}
+      </div>
+    </section>
+
+    {% if contacts %}
+      <div class="contacts-count">{{ contacts|length }} contact{{ 's' if contacts|length != 1 else '' }}</div>
+      <div class="contacts-grid">
+        {% for contact in contacts %}
+          <div class="contact-card">
+            <div class="contact-header">
+              <h3><a href="{{ url_for('view_contact', contact_id=contact._id) }}">{{ contact.name }}</a></h3>
+              <span class="category-badge">{{ contact.get('category', 'Personal') }}</span>
+            </div>
+
+            {% if contact.get('emails') %}
+              <div class="contact-info">
+                <strong>Email:</strong>
+                {% for email in contact.emails %}
+                  <a href="mailto:{{ email }}">{{ email }}</a>{% if not loop.last %}<br/>{% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if contact.get('phones') %}
+              <div class="contact-info">
+                <strong>Phone:</strong>
+                {% for phone in contact.phones %}
+                  <a href="tel:{{ phone }}">{{ phone }}</a>{% if not loop.last %}<br/>{% endif %}
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            {% if contact.get('company') %}
+              <div class="contact-info">
+                <strong>Company:</strong> {{ contact.company }}
+              </div>
+            {% endif %}
+
+            {% if contact.get('tags') %}
+              <div class="tags">
+                {% for tag in contact.tags %}
+                  <span class="tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <div class="contact-actions">
+              <a class="button button-sm button-secondary" href="{{ url_for('edit_contact', contact_id=contact._id) }}">Edit</a>
+              <form class="inline-form" action="{{ url_for('delete_contact', contact_id=contact._id) }}" method="post" onsubmit="return confirm('Delete this contact?');">
+                <button class="button button-sm button-danger" type="submit">Delete</button>
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <p>No contacts found.</p>
+        {% if search_query or current_category or current_tag %}
+          <p><a href="{{ url_for('index') }}">Clear filters</a> or <a href="{{ url_for('add_contact') }}">create a new contact</a></p>
+        {% else %}
+          <p><a href="{{ url_for('add_contact') }}">Create your first contact</a></p>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Import Contacts - ContactBook{% endblock %}
+
+{% block content %}
+  <section class="import-section">
+    <h2>Import Contacts</h2>
+    
+    <div class="import-info">
+      <p>Upload a CSV file to import multiple contacts at once.</p>
+      <h3>CSV Format</h3>
+      <p>Your CSV file should have the following columns (headers required):</p>
+      <pre>name,emails,phones,category,tags,company,address,website,notes</pre>
+      <p><strong>Notes:</strong></p>
+      <ul>
+        <li>Name is required; all other fields are optional</li>
+        <li>For multiple emails, phones, or tags, use commas (e.g., "email1@ex.com,email2@ex.com")</li>
+        <li>Categories: Personal, Work, Family, Friend, Colleague, Other</li>
+        <li>Download an <a href="{{ url_for('export_contacts') }}">example from your current contacts</a></li>
+      </ul>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="import-form">
+      <div class="form-group">
+        <label for="file">Select CSV File</label>
+        <input id="file" name="file" type="file" accept=".csv" required />
+      </div>
+      
+      <button class="button button-primary" type="submit">Import Contacts</button>
+      <a class="button button-secondary" href="{{ url_for('index') }}">Cancel</a>
+    </form>
+  </section>
+{% endblock %}
